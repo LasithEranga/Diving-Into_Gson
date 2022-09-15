@@ -19,35 +19,42 @@ public class JsonTester {
 
     public static void main(String[] args) {
 
+        //received json string from the request
+        String requestString = "{'requestId':'54564','requestDate':'2022-12-11','method':'searchUser','user':{'name':'lasith','age':'23'}}";
 
-        String jsonString
-                = "{'name':'Lasith Eranda', 'age':23,'verified':true,'marks': [100,90,85]}";
+        //parse the json string into a JsonElement object
+        JsonElement jsonElement = JsonParser.parseString(requestString);
 
-        //create tree from JSON 
-//        JsonElement rootNode = JsonParser.parseString(jsonString);
-//        JsonObject details = rootNode.getAsJsonObject();
-//        JsonElement nameNode = details.get("name");
-//        System.out.println("Name: " + nameNode.getAsString());
-//        JsonElement ageNode = details.get("age");
-//        System.out.println("Age: " + ageNode.getAsInt());
-        
-        
-        String newString = "{'requestId':'54564','requestDate':'2022-12-11','method':'searchUser','user':{'name':'lasith','age':'23'}}";
-        
-        //create a json element and parse the json string to a json element
-        JsonElement jsonElement = JsonParser.parseString(newString);
-        
-        //then convert it to a json object
+        //get the json element as a json object
         JsonObject jsonObj = jsonElement.getAsJsonObject();
-        
-        //retrive the json object
-        JsonElement user = jsonObj.get("user");        
+
+        //this object can be contverted back into json string
+        System.out.println("Received Json object:"+jsonObj);
+
+        //we can read json properties by name 
         JsonElement requestId = jsonObj.get("requestId");
-        Gson gson = new Gson();
-        Student student = gson.fromJson(user.toString(), Student.class);
-        System.out.println(student.getName());
-        System.out.println(requestId.toString());
+        System.out.println("Received Request Id:"+requestId);
+
+        //we can get an object inside object and map it to a class as well
+        JsonElement user = jsonObj.get("user");
+        Student student = new Gson().fromJson(user.toString(), Student.class);
+        System.out.println("Received Student Name:"+student.getName());
+        System.out.println("Received Student Age:"+student.getAge());
+
+        //create an json object to send as response
+        String responseString = "{'requestId':'54564','responseCode':0,'method':'searchUser','user':" + new Gson().toJson(student) + "}";
+        System.out.println("Response String:"+responseString);
         
+        //parse into json 
+        JsonElement response = JsonParser.parseString(responseString);
+        
+        //create json object
+        JsonObject responseObject = response.getAsJsonObject();
+        
+        //create json string to send
+        String toBeSend = new Gson().toJson(responseObject);
+        System.out.println("Response Json:"+toBeSend);
+
     }
 
 }
