@@ -24,13 +24,30 @@ public class JsonTester {
                 = "{'name':'Lasith Eranda', 'age':23,'verified':true,'marks': [100,90,85]}";
 
         //create tree from JSON 
-        JsonElement rootNode = JsonParser.parseString(jsonString);
+//        JsonElement rootNode = JsonParser.parseString(jsonString);
+//        JsonObject details = rootNode.getAsJsonObject();
+//        JsonElement nameNode = details.get("name");
+//        System.out.println("Name: " + nameNode.getAsString());
+//        JsonElement ageNode = details.get("age");
+//        System.out.println("Age: " + ageNode.getAsInt());
         
-        JsonObject details = rootNode.getAsJsonObject();
-        JsonElement nameNode = details.get("name");
-        System.out.println("Name: " + nameNode.getAsString());
-        JsonElement ageNode = details.get("age");
-        System.out.println("Age: " + ageNode.getAsInt());
+        
+        String newString = "{'requestId':'54564','requestDate':'2022-12-11','method':'searchUser','user':{'name':'lasith','age':'23'}}";
+        
+        //create a json element and parse the json string to a json element
+        JsonElement jsonElement = JsonParser.parseString(newString);
+        
+        //then convert it to a json object
+        JsonObject jsonObj = jsonElement.getAsJsonObject();
+        
+        //retrive the json object
+        JsonElement user = jsonObj.get("user");        
+        JsonElement requestId = jsonObj.get("requestId");
+        Gson gson = new Gson();
+        Student student = gson.fromJson(user.toString(), Student.class);
+        System.out.println(student.getName());
+        System.out.println(requestId.toString());
+        
     }
 
 }
